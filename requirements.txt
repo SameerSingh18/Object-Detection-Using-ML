@@ -9,6 +9,3 @@ matplotlib
 requests
 yolov5
 pytube
-pafy
-yt-dlp
-
