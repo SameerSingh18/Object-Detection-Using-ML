@@ -1,33 +1,27 @@
 import cv2
-import pafy
 import numpy as np
+import streamlit as st
 
 def load_video_from_url(url):
-    """
-    Load video from YouTube URL using pafy + cv2.VideoCapture
-    """
-    video = pafy.new(url)
-    best = video.getbest(preftype="mp4")
-    return cv2.VideoCapture(best.url)
+    st.error("YouTube videos are not supported on Streamlit Cloud.")
+    return None
+
 
 def load_webcam():
-    """
-    Load video from local webcam
-    """
     return cv2.VideoCapture(0)
 
+
 def detect_objects(frame, net, output_layers, classes, colors):
-    """
-    Perform object detection on a frame using YOLO
-    """
     height, width, _ = frame.shape
 
-    # Create blob and perform forward pass
-    blob = cv2.dnn.blobFromImage(frame, 0.00392, (416, 416), (0,0,0), True, crop=False)
+    blob = cv2.dnn.blobFromImage(
+        frame, 0.00392, (416, 416),
+        (0, 0, 0), True, crop=False
+    )
+
     net.setInput(blob)
     outs = net.forward(output_layers)
 
-    # Info
     class_ids = []
     confidences = []
     boxes = []
@@ -37,6 +31,7 @@ def detect_objects(frame, net, output_layers, classes, colors):
             scores = detection[5:]
             class_id = np.argmax(scores)
             confidence = scores[class_id]
+
             if confidence > 0.5:
                 center_x = int(detection[0] * width)
                 center_y = int(detection[1] * height)
@@ -50,14 +45,28 @@ def detect_objects(frame, net, output_layers, classes, colors):
                 confidences.append(float(confidence))
                 class_ids.append(class_id)
 
-    indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
+    indexes = cv2.dnn.NMSBoxes(
+        boxes, confidences, 0.5, 0.4
+    )
+
     font = cv2.FONT_HERSHEY_PLAIN
+
     for i in range(len(boxes)):
         if i in indexes:
             x, y, w, h = boxes[i]
             label = str(classes[class_ids[i]])
             color = colors[i % len(colors)]
-            cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
-            cv2.putText(frame, label, (x, y - 5), font, 2, color, 2)
+
+            cv2.rectangle(
+                frame, (x, y),
+                (x + w, y + h),
+                color, 2
+            )
+
+            cv2.putText(
+                frame, label,
+                (x, y - 5),
+                font, 2, color, 2
+            )
 
     return frame
