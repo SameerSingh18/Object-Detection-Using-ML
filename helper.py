@@ -5,9 +5,6 @@ import cv2
 from pytube import YouTube
 
 import settings
-import pafy
-pafy.set_backend("yt-dlp")
-
 
 
 def load_model(model_path):
@@ -181,4 +178,3 @@ def play_webcam(conf, model):
                     break
         except Exception as e:
             st.sidebar.error("Error loading video: " + str(e))
-
