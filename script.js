@@ -180,7 +180,7 @@ function toggleMute() {
 }
 function tryObjectDetection() {
   console.log("Opening object detection in a new tab...");
-  window.open("https://object-detection-4u.streamlit.app/", "_blank");
+  window.open("https://object-detection-using-ml-pogbuqs2flv7zxge2toq45.streamlit.app/", "_blank");
 }
 
 function scrollToTop() {
@@ -189,3 +189,4 @@ function scrollToTop() {
     behavior: "smooth", // Smooth scrolling
   });
 }
+
